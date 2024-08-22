@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=
+  , initial-scale=1.0"
+    />
+    <title>Vue 과제1</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+    <style>
+      * {
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+      }
+      li {
+        list-style: none;
+      }
+      .container {
+        background-color: lavender;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        padding: 12px 0;
+      }
+      .task_box {
+        width: 300px;
+        height: 500px;
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        gap: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+      .input_box {
+        display: flex;
+        height: 20px;
+        gap: 8px;
+      }
+      .input_box input {
+        width: 100%;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+      .input_box button {
+        width: 50px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: white;
+        cursor: pointer;
+      }
+      .title {
+        margin-bottom: 10px;
+        width: 100%;
+        text-align: center;
+        border: 1px solid #ddd;
+      }
+
+      ul :nth-child(even) {
+        background-color: lightcoral;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="container">
+        <section class="task_box">
+          <section class="input_box">
+            <input type="text" v-model="newString" />
+            <button @click="addInfo">추가</button>
+          </section>
+          <section>
+            <h3 class="title">이름</h3>
+            <ul>
+              <li v-for="info in infos" :key="info.id">{{ info.name }}</li>
+            </ul>
+            <p>{{infos.map((el)=>el.name).join(' / ')}}</p>
+          </section>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      const createUniqueId =
+        (idx = 0) =>
+        () =>
+          idx++;
+
+      const getId = createUniqueId();
+
+      new Vue({
+        el: "#app",
+        data: function () {
+          return {
+            newString: "",
+            infos: [],
+          };
+        },
+        methods: {
+          addInfo: function () {
+            if (this.newString === "") return;
+            this.infos.push({ id: getId(), name: this.newString });
+            this.newString = "";
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

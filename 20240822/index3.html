@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=
+  , initial-scale=1.0"
+    />
+    <title>Vue 과제3</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+    <style>
+      * {
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+      }
+      .container {
+        background-color: lavender;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        padding: 12px 0;
+      }
+      .task_box {
+        width: 200px;
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: white;
+        border-radius: 10px;
+        padding: 20px;
+        gap: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="container">
+        <section class="task_box">
+          <section v-if="isBoom">
+            <p>터졌습니다.</p>
+            <p>{{counter}} 후 다시 시작</p>
+          </section>
+          <section v-else="isBoom">
+            <p>터지기 {{counter}}초 전</p>
+          </section>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      const COUNTER_TIME = 5;
+      const RESET_TIME = 3;
+      new Vue({
+        el: "#app",
+        data: function () {
+          return { counter: COUNTER_TIME, isBoom: false };
+        },
+        mounted() {
+          this.Task();
+        },
+        methods: {
+          Task: function () {
+            setTimeout(() => {
+              if (--this.counter === -1) {
+                this.counter = this.isBoom ? COUNTER_TIME : RESET_TIME;
+                this.isBoom = this.isBoom ? false : true;
+              }
+              this.Task();
+            }, 1000);
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

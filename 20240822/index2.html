@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=
+  , initial-scale=1.0"
+    />
+    <title>Vue 과제2</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+    <style>
+      * {
+        margin: 0px;
+        padding: 0px;
+        box-sizing: border-box;
+      }
+
+      .container {
+        background-color: lavender;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        padding: 12px 0;
+      }
+      .task_box {
+        width: 1000px;
+        height: 500px;
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        border-radius: 10px;
+        padding: 4px 12px;
+        gap: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .input_boxs {
+        gap: 8px;
+        height: 24px;
+        display: flex;
+      }
+      .input_box {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      thead {
+        background-color: #f0f0f0;
+      }
+      tbody td {
+        border: 1px solid darkgrey;
+        text-align: center;
+      }
+
+      tr.true {
+        background-color: lavender;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="container">
+        <div class="task_box">
+          <section class="input_boxs">
+            <div class="input_box" v-for="info in fieldInfos" :key="info.id">
+              <label :for="`input-${info.id}`"> * {{info.fieldName}} </label>
+              <input v-model="info.input" :id="`input-${info.id}`" />
+            </div>
+            <button @click="addInfo">추가</button>
+          </section>
+          <table>
+            <thead>
+              <tr>
+                <th v-for="fieldName in FIELD_NAMES" :key="fieldName">
+                  {{fieldName}}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="personInfo in personInfos"
+                :key="personInfo.id"
+                :class="`${personInfo.isNew}`"
+              >
+                <td>{{personInfo['이름']}}</td>
+                <td>{{personInfo['부서']}}</td>
+                <td>{{personInfo['직급']}}</td>
+                <td>{{personInfo['연락처']}}</td>
+                <td>
+                  <button
+                    style="border: 1px solid lightgray"
+                    @click="deleteInfo(personInfo.id)"
+                  >
+                    삭제
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const createUniqueId =
+        (idx = 0) =>
+        () =>
+          idx++;
+
+      const getId = createUniqueId();
+
+      new Vue({
+        el: "#app",
+        data: function () {
+          return {
+            FIELD_NAMES: ["이름", "부서", "직급", "연락처", "삭제"],
+            RANK_NAMES: ["사원", "대리", "과장", "차장", "부장"],
+            fieldInfos: [
+              { id: "unique-1", fieldName: "이름", input: "" },
+              { id: "unique-2", fieldName: "부서", input: "" },
+              { id: "unique-3", fieldName: "직급", input: "" },
+              { id: "unique-4", fieldName: "연락처", input: "" },
+            ],
+            personInfos: [
+              {
+                id: getId(),
+                이름: "가나다",
+                부서: "개발",
+                직급: "대리",
+                연락처: "010-1234-5678",
+                isNew: false,
+              },
+              {
+                id: getId(),
+                이름: "라마바",
+                부서: "경영지원",
+                직급: "사원",
+                연락처: "010-1234-5678",
+                isNew: false,
+              },
+              {
+                id: getId(),
+                이름: "이길동",
+                부서: "컨설팅",
+                직급: "차장",
+                연락처: "010-1234-5678",
+                isNew: false,
+              },
+            ],
+          };
+        },
+        methods: {
+          addInfo: function () {
+            if (!this.isFull()) {
+              alert("데이터를 입력해주세요.");
+              return;
+            }
+
+            if (!this.checkRank(this.fieldInfos[2].input)) {
+              alert("직급을 확인해주세요.");
+              return;
+            }
+
+            this.personInfos.push({
+              id: getId(),
+              이름: this.fieldInfos[0].input,
+              부서: this.fieldInfos[1].input,
+              직급: this.fieldInfos[2].input,
+              연락처: this.fieldInfos[3].input,
+              isNew: true,
+            });
+
+            this.init();
+          },
+
+          init: function () {
+            this.fieldInfos.forEach((info) => {
+              info.input = "";
+            });
+          },
+
+          isFull: function () {
+            return this.fieldInfos.every((info) => {
+              return info.input !== "";
+            });
+          },
+          checkRank: function (rank) {
+            return this.RANK_NAMES.includes(rank);
+          },
+
+          deleteInfo: function (id) {
+            this.personInfos = this.personInfos.filter(
+              (info) => info.id !== id
+            );
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
